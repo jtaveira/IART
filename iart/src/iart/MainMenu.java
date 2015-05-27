@@ -105,15 +105,18 @@ public class MainMenu {
     //Functions
     static void drawMainMenu() {
         System.out.println("Neural Network Main Menu");
-        System.out.println("1-Modify Input Layer Size");
-        System.out.println("2-Modify Hidden Layer Size");
-        System.out.println("3-Modify Output Layer Size");
-        System.out.println("4-Define NN Training File");
-        System.out.println("5-Define NN Testing File");
-        System.out.println("6-Create Neural Network");
-        System.out.println("7-Train Neural Network");
-        System.out.println("8-Test Neural Network");
-        System.out.println("9-Exit");
+        System.out.println("0-Modify Input Layer Size");
+        System.out.println("1-Modify Hidden Layer Size");
+        System.out.println("2-Modify Output Layer Size");
+        System.out.println("3-Define NN Training File");
+        System.out.println("4-Define NN Testing File");
+        System.out.println("5-Create Neural Network");
+        System.out.println("6-Train Neural Network");
+        System.out.println("7-Test Neural Network");
+        System.out.println("8-Save Neural Network");
+        System.out.println("9-Load Neural Network");
+        System.out.println("10-Exit");
+        System.out.print("Choose an option:");
     }
 
     static void printFileInformation(String file) throws FileNotFoundException, IOException {
@@ -126,7 +129,7 @@ public class MainMenu {
         }
     }
 
-    boolean loadTrainingFile(String file) {
+    boolean loadTrainingFile() {
         if (hasTrainFile) {
             return true;
         }
@@ -134,7 +137,7 @@ public class MainMenu {
         return false;
     }
 
-    boolean loadTestFile(String file) {
+    boolean loadTestFile() {
         if (hasTestFile) {
             return true;
         }
@@ -156,15 +159,15 @@ public class MainMenu {
     //Main Function
     public static void main(String[] args) throws IOException {
 
-        int op = 0;
+        int op = -1;
 
-        while (op != 9) {
+        while (op != 10) {
             drawMainMenu();
 
             Scanner in = new Scanner(System.in);
             op = in.nextInt();
 
-            if (op == 1) {
+            if (op == 0) {
 
                 System.out.print("Insert the desired value:");
 
@@ -173,7 +176,7 @@ public class MainMenu {
 
                 String temp = setInputLayerSize(size);
                 System.out.println(temp);
-            } else if (op == 2) {
+            } else if (op == 1) {
 
                 System.out.print("Insert the desired value:");
 
@@ -182,7 +185,7 @@ public class MainMenu {
 
                 String temp = setHiddenLayerSize(size);
                 System.out.println(temp);
-            } else if (op == 3) {
+            } else if (op == 2) {
 
                 System.out.print("Insert the desired value:");
 
@@ -191,7 +194,7 @@ public class MainMenu {
 
                 String temp = setOutputLayerSize(size);
                 System.out.println(temp);
-            } else if (op == 4) {
+            } else if (op == 3) {
 
                 System.out.print("Insert the desired path file:");
 
@@ -200,7 +203,7 @@ public class MainMenu {
 
                 String temp = setTrainFile(file);
                 System.out.println(temp);
-            } else if (op == 5) {
+            } else if (op == 4) {
 
                 System.out.print("Insert the desired path file:");
 
@@ -209,11 +212,15 @@ public class MainMenu {
 
                 String temp = setTestFile(file);
                 System.out.println(temp);
+            } else if (op == 5) {
+
             } else if (op == 6) {
 
             } else if (op == 7) {
 
             } else if (op == 8) {
+
+            } else if (op == 9) {
 
             }
         }
