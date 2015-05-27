@@ -1,5 +1,6 @@
 package iart;
 
+import static iart.MyNeuralNetwork.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,46 +11,13 @@ import java.util.Scanner;
 public class MainMenu {
 
     //Variables Initialization
-    private static int inputLayerSize = 41;
-    private static int hiddenLayerSize = 30;
-    private static int outputLayerSize = 1;
     private static String trainFile = "";
     private static String testFile = "";
     private static boolean hasTrainFile = false;
     private static boolean hasTestFile = false;
 
     //Sets
-    static String setInputLayerSize(int size) {
-
-        if (size <= 0) {
-            return "Input Layer Size is invalid, must be a value bigger than 0";
-        }
-
-        inputLayerSize = size;
-        return "Input Layer Size is now " + size + ".";
-    }
-
-    static String setHiddenLayerSize(int size) {
-
-        if (size <= 0) {
-            return "Hidden Layer Size is invalid, must be a value bigger than 0";
-        }
-
-        hiddenLayerSize = size;
-        return "Hidden Layer Size is now " + size + ".";
-    }
-
-    static String setOutputLayerSize(int size) {
-
-        if (size <= 0) {
-            return "Output Layer Size is invalid, must be a value bigger than 0";
-        }
-
-        outputLayerSize = size;
-        return "Output Layer Size is now " + size + ".";
-    }
-
-    static String setTrainFile(String file) {
+    public static String setTrainFile(String file) {
 
         File f = new File(file);
         if (f.exists() && !f.isDirectory()) {
@@ -62,7 +30,7 @@ public class MainMenu {
         return "That file does not exist.";
     }
 
-    static String setTestFile(String file) {
+    public static String setTestFile(String file) {
 
         File f = new File(file);
         if (f.exists() && !f.isDirectory()) {
@@ -76,50 +44,46 @@ public class MainMenu {
     }
 
     //Gets
-    int getInputLayerSize() {
-        return inputLayerSize;
-    }
-
-    int getHiddenLayerSize() {
-        return hiddenLayerSize;
-    }
-
-    int getOutputLayerSize() {
-        return outputLayerSize;
-    }
-
-    String getTrainFile() {
+    public static String getTrainFile() {
         if (hasTrainFile) {
             return trainFile;
         }
         return "Training File must be defined.";
     }
 
-    String getTestFile() {
+    public static String getTestFile() {
         if (hasTestFile) {
             return testFile;
         }
         return "Testing File must be defined.";
     }
+    
+    public static boolean getHasTrainFile(){
+        return hasTrainFile;
+    }
+    
+    public static boolean getHasTestFile(){
+        return hasTestFile;
+    }
 
     //Functions
-    static void drawMainMenu() {
+    public static void drawMainMenu() {
         System.out.println("Neural Network Main Menu");
-        System.out.println("0-Modify Input Layer Size");
-        System.out.println("1-Modify Hidden Layer Size");
-        System.out.println("2-Modify Output Layer Size");
-        System.out.println("3-Define NN Training File");
-        System.out.println("4-Define NN Testing File");
-        System.out.println("5-Create Neural Network");
-        System.out.println("6-Train Neural Network");
-        System.out.println("7-Test Neural Network");
-        System.out.println("8-Save Neural Network");
-        System.out.println("9-Load Neural Network");
-        System.out.println("10-Exit");
+        System.out.println("0 - Modify Input Layer Size");
+        System.out.println("1 - Modify Hidden Layer Size");
+        System.out.println("2 - Modify Output Layer Size");
+        System.out.println("3 - Define NN Training File");
+        System.out.println("4 - Define NN Testing File");
+        System.out.println("5 - Create Neural Network");
+        System.out.println("6 - Train Neural Network");
+        System.out.println("7 - Test Neural Network");
+        System.out.println("8 - Save Neural Network");
+        System.out.println("9 - Load Neural Network");
+        System.out.println("10 - Exit");
         System.out.print("Choose an option:");
     }
 
-    static void printFileInformation(String file) throws FileNotFoundException, IOException {
+    public static void printFileInformation(String file) throws FileNotFoundException, IOException {
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -129,7 +93,7 @@ public class MainMenu {
         }
     }
 
-    boolean loadTrainingFile() {
+    public static boolean loadTrainingFile() {
         if (hasTrainFile) {
             return true;
         }
@@ -137,23 +101,11 @@ public class MainMenu {
         return false;
     }
 
-    boolean loadTestFile() {
+    public static boolean loadTestFile() {
         if (hasTestFile) {
             return true;
         }
         return false;
-    }
-
-    String createNeuralNetwork() {
-        return "";
-    }
-
-    String trainNeuralNetwork() {
-        return "";
-    }
-
-    String testNeuralNetwork() {
-        return "";
     }
 
     //Main Function
