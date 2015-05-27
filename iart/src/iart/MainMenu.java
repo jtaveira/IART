@@ -1,6 +1,10 @@
 package iart;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class MainMenu {
@@ -112,11 +116,21 @@ public class MainMenu {
         System.out.println("9-Exit");
     }
 
+    static void printFileInformation(String file) throws FileNotFoundException, IOException {
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        }
+    }
+
     boolean loadTrainingFile(String file) {
         if (hasTrainFile) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -127,10 +141,10 @@ public class MainMenu {
         return false;
     }
 
-    String createNeuralNetwork(){
+    String createNeuralNetwork() {
         return "";
     }
-    
+
     String trainNeuralNetwork() {
         return "";
     }
@@ -140,7 +154,7 @@ public class MainMenu {
     }
 
     //Main Function
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         int op = 0;
 
@@ -159,9 +173,7 @@ public class MainMenu {
 
                 String temp = setInputLayerSize(size);
                 System.out.println(temp);
-            } 
-            
-            else if (op == 2) {
+            } else if (op == 2) {
 
                 System.out.print("Insert the desired value:");
 
@@ -170,9 +182,7 @@ public class MainMenu {
 
                 String temp = setHiddenLayerSize(size);
                 System.out.println(temp);
-            } 
-            
-            else if (op == 3) {
+            } else if (op == 3) {
 
                 System.out.print("Insert the desired value:");
 
@@ -181,10 +191,8 @@ public class MainMenu {
 
                 String temp = setOutputLayerSize(size);
                 System.out.println(temp);
-            } 
-            
-            else if (op == 4) {
-                
+            } else if (op == 4) {
+
                 System.out.print("Insert the desired path file:");
 
                 Scanner in2 = new Scanner(System.in);
@@ -192,10 +200,8 @@ public class MainMenu {
 
                 String temp = setTrainFile(file);
                 System.out.println(temp);
-            } 
-            
-            else if (op == 5) {
-                
+            } else if (op == 5) {
+
                 System.out.print("Insert the desired path file:");
 
                 Scanner in2 = new Scanner(System.in);
@@ -203,17 +209,11 @@ public class MainMenu {
 
                 String temp = setTestFile(file);
                 System.out.println(temp);
-            } 
-            
-            else if (op == 6) {
+            } else if (op == 6) {
 
-            } 
-            
-            else if (op == 7) {
+            } else if (op == 7) {
 
-            }
-            
-            else if (op == 8) {
+            } else if (op == 8) {
 
             }
         }
