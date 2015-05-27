@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import org.neuroph.core.data.DataSet;
+import org.neuroph.core.data.DataSetRow;
 
 public class MainMenu {
 
@@ -15,6 +17,7 @@ public class MainMenu {
     private static String testFile = "";
     private static boolean hasTrainFile = false;
     private static boolean hasTestFile = false;
+    private static boolean hasCreatedNetwork = false;
 
     //Sets
     public static String setTrainFile(String file) {
@@ -57,13 +60,17 @@ public class MainMenu {
         }
         return "Testing File must be defined.";
     }
-    
-    public static boolean getHasTrainFile(){
+
+    public static boolean getHasTrainFile() {
         return hasTrainFile;
     }
-    
-    public static boolean getHasTestFile(){
+
+    public static boolean getHasTestFile() {
         return hasTestFile;
+    }
+
+    public static boolean getHasCreatedNetwork() {
+        return hasCreatedNetwork;
     }
 
     //Functions
@@ -93,16 +100,68 @@ public class MainMenu {
         }
     }
 
-    public static boolean loadTrainingFile() {
+    public static boolean loadTrainingFile() throws FileNotFoundException, IOException {
         if (hasTrainFile) {
+
+            DataSet set = new DataSet(getInputLayerSize(), getOutputLayerSize());
+
+            try (BufferedReader br = new BufferedReader(new FileReader(trainFile))) {
+                String line;
+
+                while ((line = br.readLine()) != null) {
+
+                    String[] parts = line.split(";");
+                    String output = parts[parts.length-1];
+
+                    double[] inputsDouble = new double[getInputLayerSize()];
+                    double[] outputDouble = new double[getOutputLayerSize()];
+                    outputDouble[getOutputLayerSize()-1] = Double.parseDouble(output);
+                    
+                    for (int i = 0; i < parts.length-2; i++) {
+                        inputsDouble[i] = Double.parseDouble(parts[i]);                      
+                    }
+
+                    set.addRow(new DataSetRow(inputsDouble, outputDouble));
+                }
+            }
+
+            setTrainingSet(set);
+            System.out.println("Neural Network has started learning!");
+            trainNeuralNetwork();
             return true;
         }
 
         return false;
     }
 
-    public static boolean loadTestFile() {
+    public static boolean loadTestingFile() throws FileNotFoundException, IOException {
         if (hasTestFile) {
+            
+            DataSet set = new DataSet(getInputLayerSize(), getOutputLayerSize());
+
+            try (BufferedReader br = new BufferedReader(new FileReader(testFile))) {
+                String line;
+
+                while ((line = br.readLine()) != null) {
+
+                    String[] parts = line.split(";");
+                    String output = parts[parts.length-1];
+
+                    double[] inputsDouble = new double[getInputLayerSize()];
+                    double[] outputDouble = new double[getOutputLayerSize()];
+                    outputDouble[getOutputLayerSize()-1] = Double.parseDouble(output);
+                    
+                    for (int i = 0; i < parts.length-2; i++) {
+                        inputsDouble[i] = Double.parseDouble(parts[i]);                      
+                    }
+
+                    set.addRow(new DataSetRow(inputsDouble, outputDouble));
+                }
+            }
+
+            setTestingSet(set);
+            System.out.println("Neural Network has started testing!");
+            testNeuralNetwork();   
             return true;
         }
         return false;
@@ -166,14 +225,37 @@ public class MainMenu {
                 System.out.println(temp);
             } else if (op == 5) {
 
+                createNeuralNetwork();
+                hasCreatedNetwork = true;
+                System.out.println("Neural Network created successfully.");
             } else if (op == 6) {
+
+                if (!hasCreatedNetwork || !hasTrainFile) {
+                    System.out.println("You must choose a training file and create a neural network before training it.");
+                } else {
+                    loadTrainingFile();
+                }
 
             } else if (op == 7) {
 
+                if (!hasCreatedNetwork || !hasTestFile) {
+                    System.out.println("You must choose a testing file and create a neural network before training it.");
+                } else {
+                    loadTestingFile();
+                }
+
             } else if (op == 8) {
 
+                if (!hasCreatedNetwork) {
+                    System.out.println("You must create a neural network before saving it.");
+                } else {
+                    saveNeuralNetwork();
+                    System.out.println("Neural Network saved successfully.");
+                }
             } else if (op == 9) {
 
+                loadNeuralNetwork();
+                System.out.println("Neural Network loaded successfully.");
             }
         }
 
