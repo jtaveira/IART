@@ -106,9 +106,10 @@ public class MainMenu {
         System.out.println("3-Modify Output Layer Size");
         System.out.println("4-Define NN Training File");
         System.out.println("5-Define NN Testing File");
-        System.out.println("6-Train Neural Network");
-        System.out.println("7-Test Neural Network");
-        System.out.println("8-Exit");
+        System.out.println("6-Create Neural Network");
+        System.out.println("7-Train Neural Network");
+        System.out.println("8-Test Neural Network");
+        System.out.println("9-Exit");
     }
 
     boolean loadTrainingFile(String file) {
@@ -126,11 +127,15 @@ public class MainMenu {
         return false;
     }
 
-    String TrainNeuralNetwork() {
+    String createNeuralNetwork(){
+        return "";
+    }
+    
+    String trainNeuralNetwork() {
         return "";
     }
 
-    String TestNeuralNetwork() {
+    String testNeuralNetwork() {
         return "";
     }
 
@@ -139,7 +144,7 @@ public class MainMenu {
 
         int op = 0;
 
-        while (op != 8) {
+        while (op != 9) {
             drawMainMenu();
 
             Scanner in = new Scanner(System.in);
@@ -205,6 +210,10 @@ public class MainMenu {
             } 
             
             else if (op == 7) {
+
+            }
+            
+            else if (op == 8) {
 
             }
         }
