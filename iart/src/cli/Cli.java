@@ -7,7 +7,7 @@ public class Cli {
     
     public static void main(String[] args) throws IOException {
         
-        CVSFileIO file = new CVSFileIO(args[0]);
+        CVSFileIO file = new CVSFileIO(args[0], 41, 1);
         
         file.printFile();     
         
