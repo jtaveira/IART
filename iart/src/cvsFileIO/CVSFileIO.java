@@ -53,6 +53,10 @@ public class CVSFileIO {
         }
     }
 
+    public CVSFileIO() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public void printFile() {
 
         System.out.println(numOfRows);
