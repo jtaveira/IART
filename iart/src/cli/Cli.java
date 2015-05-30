@@ -1,19 +1,12 @@
 package cli;
 
-import static iart.MainMenu.loadTestingFile;
-import static iart.MainMenu.loadTrainingFile;
-import static iart.MainMenu.setTestFile;
-import static iart.MainMenu.setTrainFile;
 import cvsFileIO.CVSFileIO;
-import static iart.MyNeuralNetwork.createNeuralNetwork;
-import static iart.MyNeuralNetwork.loadNeuralNetwork;
-import static iart.MyNeuralNetwork.saveNeuralNetwork;
-import static iart.MyNeuralNetwork.setHiddenLayerSize;
-import static iart.MyNeuralNetwork.setInputLayerSize;
-import static iart.MyNeuralNetwork.setOutputLayerSize;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import logic.NeuralNetwork;
+import org.neuroph.core.data.DataSet;
 
 public class Cli {
 
@@ -28,153 +21,122 @@ public class Cli {
 
     public Cli() {
         this.neuralNetwork = null;
-        this.testFileIO = new CVSFileIO();
-        this.trainFileIO = new CVSFileIO();
+        this.testFileIO = null;
+        this.trainFileIO = null;
     }
 
     //Functions
     private static void drawMainMenu() {
         System.out.println("Neural Network Main Menu");
-        System.out.println("0 - Modify Input Layer Size");
-        System.out.println("1 - Modify Hidden Layer Size");
-        System.out.println("2 - Modify Output Layer Size");
-        System.out.println("3 - Define NN Training File");
-        System.out.println("4 - Define NN Testing File");
-        System.out.println("5 - Create Neural Network");
-        System.out.println("6 - Train Neural Network");
-        System.out.println("7 - Test Neural Network");
-        System.out.println("8 - Save Neural Network");
-        System.out.println("9 - Load Neural Network");
-        System.out.println("10 - Exit");
+        System.out.println("0 - Create Neural Network");
+        System.out.println("1 - Define NN Training File");
+        System.out.println("2 - Define NN Testing File");
+        System.out.println("3 - Train Neural Network");
+        System.out.println("4 - Test Neural Network");
+        System.out.println("5 - Save Neural Network");
+        System.out.println("6 - Load Neural Network");
+        System.out.println("7 - Exit");
         System.out.print("Choose an option:");
     }
 
-    private void fileInput(FileType fType) {
+    private int menuInput() {
+        Scanner in = new Scanner(System.in);
+        return in.nextInt();
+    }
+
+    private double menuInputDouble() {
+        Scanner in = new Scanner(System.in);
+        return in.nextDouble();
+    }
+
+    private String menuInputString() {
+        Scanner in = new Scanner(System.in);
+        return in.next();
+    }
+
+    private void fileInput(FileType fType) throws IOException {
 
         System.out.print("Insert the desired path file:");
 
-        Scanner in = new Scanner(System.in);
-        String file = in.next();
+        String file = menuInputString();
 
         if (fType == FileType.TEST) {
-            setTrainFile(file);
+            this.testFileIO = new CVSFileIO(file, neuralNetwork.getInputLayerSize(), neuralNetwork.getOutputLayerSize());
+            neuralNetwork.setTestingSet(this.testFileIO.getContent());
         } else if (fType == FileType.TRAIN) {
-            setTestFile(file);
+            this.trainFileIO = new CVSFileIO(file, neuralNetwork.getInputLayerSize(), neuralNetwork.getOutputLayerSize());
+            neuralNetwork.setTrainingSet(this.trainFileIO.getContent());
         }
 
-        System.out.print("File inserted with success");
+        System.out.println("File inserted with success");
     }
 
-    private Boolean createNeuralNetwork(int inputLayerSize, int hiddenLayerSize, int outputLayerSize) {
+    private void createNeuralNetwork() {
 
-        if (neuralNetwork == null) {
-            neuralNetwork = new NeuralNetwork(inputLayerSize, hiddenLayerSize, outputLayerSize);
-            System.out.println("Neural Network created successfully.");
-            return true;
-        } else {
-            System.out.print("Neural Network already created!!");
-            return false;
-        }
+        System.out.print("Input Layer Size:");
+        int inputLayerSize = menuInput();
+
+        System.out.print("Hidden Layer Size:");
+        int hiddenLayerSize = menuInput();
+
+        System.out.print("Output Layer Size:");
+        int outputLayerSize = menuInput();
+
+        neuralNetwork = new NeuralNetwork(inputLayerSize, hiddenLayerSize, outputLayerSize);
+        System.out.println("Neural Network created successfully.");
     }
 
-    private void changeInputLayerSize() {
-
+    private void trainNetwork() {
         if (neuralNetwork != null) {
-
-            System.out.print("Insert the desired value:");
-            Scanner in = new Scanner(System.in);
-            int size = in.nextInt();
-            neuralNetwork.setInputLayerSize(size);
-
-            System.out.print("Value changed with success!");
-        } else {
-            System.out.print("Neural Network Must be created First!!");
+            System.out.println("Please enter training parameters");
+            System.out.println("Max Error:");
+            double maxError = menuInputDouble();
+            System.out.println("Learning Rate:");
+            double learningRate = menuInputDouble();
+            neuralNetwork.setTrainingParameters(maxError, learningRate);
+            neuralNetwork.trainNetwork();
         }
     }
 
-    private void changeHiddenLayerSize() {
-
+    private void testNetwork() {
         if (neuralNetwork != null) {
-
-            System.out.print("Insert the desired value:");
-            Scanner in = new Scanner(System.in);
-            int size = in.nextInt();
-            neuralNetwork.setHiddenLayerSize(size);
-
-            System.out.print("Value changed with success!");
-        } else {
-            System.out.print("Neural Network Must be created First!!");
+            System.out.println("Network is being tested!");
+            neuralNetwork.testNetwork();
+            System.out.println("Finish Testing!");        
         }
     }
 
-    private void changeOutputLayerSize() {
-
-        if (neuralNetwork != null) {
-
-            System.out.print("Insert the desired value:");
-            Scanner in = new Scanner(System.in);
-            int size = in.nextInt();
-            neuralNetwork.setInputLayerSize(size);
-
-            System.out.print("Value changed with success!");
-        } else {
-            System.out.print("Neural Network Must be created First!!");
-        }
-    }
-
-    public void Menu() {
+    public void Menu() throws IOException {
 
         int op = -1;
 
-        while (op != 10) {
+        while (op != 7) {
+
             drawMainMenu();
 
-            Scanner in = new Scanner(System.in);
-            op = in.nextInt();
+            op = menuInput();
 
-            if (op == 0)
-                changeInputLayerSize();
-            else if (op == 1)
-                changeHiddenLayerSize();
-            else if (op == 2)
-                changeOutputLayerSize();
-            else if (op == 3)
-                fileInput(Cli.FileType.TRAIN);
-            else if (op == 4)
-                fileInput(Cli.FileType.TEST);
-            else if (op == 5) {
-
+            if (op == 0) {
                 createNeuralNetwork();
-                hasCreatedNetwork = true;
-                System.out.println("Neural Network created successfully.");
+            } else if (op == 1) {
+                fileInput(FileType.TRAIN);
+            } else if (op == 2) {
+                fileInput(FileType.TEST);
+            } else if (op == 3) {
+                trainNetwork();
+            } else if (op == 4) {
+                testNetwork();
+            } else if (op == 5) {
+                /*
+                 if (!hasCreatedNetwork) {
+                 System.out.println("You must create a neural network before saving it.");
+                 } else {
+                 saveNeuralNetwork();
+                 System.out.println("Neural Network saved successfully.");
+                 }
+                 */
             } else if (op == 6) {
 
-                if (!hasCreatedNetwork || !hasTrainFile) {
-                    System.out.println("You must choose a training file and create a neural network before training it.");
-                } else {
-                    loadTrainingFile();
-                }
-
-            } else if (op == 7) {
-
-                if (!hasCreatedNetwork || !hasTestFile) {
-                    System.out.println("You must choose a testing file and create a neural network before training it.");
-                } else {
-                    loadTestingFile();
-                }
-
-            } else if (op == 8) {
-
-                if (!hasCreatedNetwork) {
-                    System.out.println("You must create a neural network before saving it.");
-                } else {
-                    saveNeuralNetwork();
-                    System.out.println("Neural Network saved successfully.");
-                }
-            } else if (op == 9) {
-
-                loadNeuralNetwork();
-                System.out.println("Neural Network loaded successfully.");
             }
         }
 

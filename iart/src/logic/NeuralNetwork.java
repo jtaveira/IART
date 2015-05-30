@@ -1,5 +1,8 @@
 package logic;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.data.DataSetRow;
 import org.neuroph.nnet.MultiLayerPerceptron;
@@ -35,17 +38,29 @@ public class NeuralNetwork {
     }
 
     public void trainNetwork() {
-
         neuralNetwork.learn(trainingSet);
     }
 
     public void testNetwork() {
+        
+        //ArrayList<double[]> results = new ArrayList<>();
+        
+       
 
         for (DataSetRow dataRow : testingSet.getRows()) {
             neuralNetwork.setInput(dataRow.getInput());
             neuralNetwork.calculate();
+            neuralNetwork.getLearningRule().getMaxError();
+            
+            //results.add(neuralNetwork.getOutput());
+            
+            double[ ] networkOutput = neuralNetwork.getOutput();
+            System.out.print("Expected: " + Arrays.toString(dataRow.getDesiredOutput()));
+            System.out.println(" Output: " + Arrays.toString(networkOutput));            
         }
     }
+    
+    
 
     public int getInputLayerSize() {
         return inputLayerSize;

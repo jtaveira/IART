@@ -1,7 +1,5 @@
 package cvsFileIO;
 
-import static iart.MyNeuralNetwork.getInputLayerSize;
-import static iart.MyNeuralNetwork.getOutputLayerSize;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -36,25 +34,21 @@ public class CVSFileIO {
                 String[] parts = line.split(";");
                 String output = parts[parts.length - 1];
 
-                double[] inputsDouble = new double[getInputLayerSize()];
+                double[] inputsDouble = new double[numInputCols];
 
                 for (int i = 0; i < parts.length - 2; i++) {
                     inputsDouble[i] = Double.parseDouble(parts[i]);
                 }
 
-                double[] outputDouble = new double[getOutputLayerSize()];
+                double[] outputDouble = new double[numOutputCols];
 
-                outputDouble[getOutputLayerSize() - 1] = Double.parseDouble(output);
+                outputDouble[numOutputCols - 1] = Double.parseDouble(output);
 
                 content.addRow(new DataSetRow(inputsDouble, outputDouble));
 
                 numOfRows++;
             }
         }
-    }
-
-    public CVSFileIO() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void printFile() {
