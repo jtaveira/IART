@@ -7,9 +7,6 @@ package main;
 
 import cli.Cli;
 import java.io.IOException;
-import java.util.Arrays;
-import logic.NeuralNetwork;
-
 /**
  *
  * @author RicardoJorge

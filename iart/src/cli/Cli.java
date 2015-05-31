@@ -2,40 +2,29 @@ package cli;
 
 import cvsFileIO.CVSFileIO;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import logic.NeuralNetwork;
-import org.neuroph.core.data.DataSet;
 
 public class Cli {
 
-    public enum FileType {
-
-        TRAIN, TEST
-    }
-
     private NeuralNetwork neuralNetwork;
-    private CVSFileIO testFileIO;
-    private CVSFileIO trainFileIO;
+    private CVSFileIO FileIO;
 
     public Cli() {
         this.neuralNetwork = null;
-        this.testFileIO = null;
-        this.trainFileIO = null;
+        this.FileIO = null;
     }
 
     //Functions
     private static void drawMainMenu() {
         System.out.println("Neural Network Main Menu");
         System.out.println("0 - Create Neural Network");
-        System.out.println("1 - Define NN Training File");
-        System.out.println("2 - Define NN Testing File");
-        System.out.println("3 - Train Neural Network");
-        System.out.println("4 - Test Neural Network");
-        System.out.println("5 - Save Neural Network");
-        System.out.println("6 - Load Neural Network");
-        System.out.println("7 - Exit");
+        System.out.println("1 - Define/Change NN DataSet File");
+        System.out.println("2 - Train Neural Network");
+        System.out.println("3 - Test Neural Network");
+        System.out.println("4 - Save Neural Network");
+        System.out.println("5 - Load Neural Network");
+        System.out.println("6 - Exit");
         System.out.print("Choose an option:");
     }
 
@@ -54,19 +43,14 @@ public class Cli {
         return in.next();
     }
 
-    private void fileInput(FileType fType) throws IOException {
+    private void fileInput() throws IOException {
 
         System.out.print("Insert the desired path file:");
-
+        
         String file = menuInputString();
 
-        if (fType == FileType.TEST) {
-            this.testFileIO = new CVSFileIO(file, neuralNetwork.getInputLayerSize(), neuralNetwork.getOutputLayerSize());
-            neuralNetwork.setTestingSet(this.testFileIO.getContent());
-        } else if (fType == FileType.TRAIN) {
-            this.trainFileIO = new CVSFileIO(file, neuralNetwork.getInputLayerSize(), neuralNetwork.getOutputLayerSize());
-            neuralNetwork.setTrainingSet(this.trainFileIO.getContent());
-        }
+        this.FileIO = new CVSFileIO(file, neuralNetwork.getInputLayerSize(), neuralNetwork.getOutputLayerSize());
+        neuralNetwork.setDataSet(this.FileIO.getContent());
 
         System.out.println("File inserted with success");
     }
@@ -102,7 +86,8 @@ public class Cli {
         if (neuralNetwork != null) {
             System.out.println("Network is being tested!");
             neuralNetwork.testNetwork();
-            System.out.println("Finish Testing!");        
+            System.out.println("Total Network Error: " + neuralNetwork.getNeuralNetwork().getLearningRule().getTotalNetworkError());
+            System.out.println("Finish Testing!");
         }
     }
 
@@ -110,7 +95,7 @@ public class Cli {
 
         int op = -1;
 
-        while (op != 7) {
+        while (op != 6) {
 
             drawMainMenu();
 
@@ -119,14 +104,12 @@ public class Cli {
             if (op == 0) {
                 createNeuralNetwork();
             } else if (op == 1) {
-                fileInput(FileType.TRAIN);
+                fileInput();
             } else if (op == 2) {
-                fileInput(FileType.TEST);
-            } else if (op == 3) {
                 trainNetwork();
-            } else if (op == 4) {
+            } else if (op == 3) {
                 testNetwork();
-            } else if (op == 5) {
+            } else if (op == 4) {
                 /*
                  if (!hasCreatedNetwork) {
                  System.out.println("You must create a neural network before saving it.");
@@ -135,7 +118,9 @@ public class Cli {
                  System.out.println("Neural Network saved successfully.");
                  }
                  */
-            } else if (op == 6) {
+            } else if (op == 5) {
+                
+                
 
             }
         }

@@ -1,7 +1,5 @@
 package logic;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import org.neuroph.core.data.DataSet;
 import org.neuroph.core.data.DataSetRow;
@@ -17,8 +15,7 @@ public class NeuralNetwork {
 
     private final BackPropagation learning_rule;
 
-    private DataSet trainingSet;
-    private DataSet testingSet;
+    private DataSet dataSet;
     private MultiLayerPerceptron neuralNetwork;
 
     public NeuralNetwork(int inputLayerSize, int hiddenLayerSize, int outputLayerSize) {
@@ -35,32 +32,24 @@ public class NeuralNetwork {
         this.learning_rule.setMaxError(maxError);
         this.learning_rule.setLearningRate(learningRate);
         neuralNetwork.setLearningRule(this.learning_rule);
+        this.dataSet.shuffle();
     }
 
     public void trainNetwork() {
-        neuralNetwork.learn(trainingSet);
+        
+        DataSet[] trainingSet = dataSet.sample(70);
+        neuralNetwork.learn(trainingSet[0]);
     }
 
     public void testNetwork() {
-        
-        //ArrayList<double[]> results = new ArrayList<>();
-        
-       
 
-        for (DataSetRow dataRow : testingSet.getRows()) {
+        DataSet[] testingSet = dataSet.sample(30);
+
+        for (DataSetRow dataRow : testingSet[0].getRows()) {
             neuralNetwork.setInput(dataRow.getInput());
             neuralNetwork.calculate();
-            neuralNetwork.getLearningRule().getMaxError();
-            
-            //results.add(neuralNetwork.getOutput());
-            
-            double[ ] networkOutput = neuralNetwork.getOutput();
-            System.out.print("Expected: " + Arrays.toString(dataRow.getDesiredOutput()));
-            System.out.println(" Output: " + Arrays.toString(networkOutput));            
         }
     }
-    
-    
 
     public int getInputLayerSize() {
         return inputLayerSize;
@@ -86,20 +75,12 @@ public class NeuralNetwork {
         this.outputLayerSize = outputLayerSize;
     }
 
-    public DataSet getTrainingSet() {
-        return trainingSet;
+    public DataSet getDataSet() {
+        return dataSet;
     }
 
-    public void setTrainingSet(DataSet trainingSet) {
-        this.trainingSet = trainingSet;
-    }
-
-    public DataSet getTestingSet() {
-        return testingSet;
-    }
-
-    public void setTestingSet(DataSet testingSet) {
-        this.testingSet = testingSet;
+    public void setDataSet(DataSet dataSet) {
+        this.dataSet = dataSet;
     }
 
     public MultiLayerPerceptron getNeuralNetwork() {
